@@ -180,10 +180,13 @@ public class App{
     @RequestMapping("getAllEvents")
     public List<EventRepresentation> getAllEvents() {
     	
+    	// To get access to event collection representation
     	EventCollection eventCollection = eventApi.getEvents();
+    	
+    	// To get access to e.g. all event pages
     	PagedEventCollectionRepresentation pagedEventCollectionRepresentation = eventCollection.get();   
     	
-    	// Representation of a series of event elements
+    	// Representation of a series of event elements. Get all pages.
     	Iterable<EventRepresentation> iterable = pagedEventCollectionRepresentation.allPages();
     	
     	// Usage of google guava to create an event list
