@@ -183,7 +183,10 @@ public class App{
     	EventCollection eventCollection = eventApi.getEvents();
     	PagedEventCollectionRepresentation pagedEventCollectionRepresentation = eventCollection.get();   
     	
-    	Iterable<EventRepresentation> iterable = pagedEventCollectionRepresentation.allPages();    	
+    	// Representation of a series of event elements
+    	Iterable<EventRepresentation> iterable = pagedEventCollectionRepresentation.allPages();
+    	
+    	// Usage of google guava to create an event list
     	List<EventRepresentation> eventRepresentationList = Lists.newArrayList(iterable);
     	
     	return eventRepresentationList;
@@ -192,9 +195,12 @@ public class App{
 	// delete all events
     // there is no bulk delete for events existing.
 	@RequestMapping("deleteAllEvents")
-	public void deleteAllAlarms() {		
+	public void deleteAllAlarms() {
+		
 		List<EventRepresentation> eventRepresentationList = getAllEvents();		
-    	for(EventRepresentation eventRepresentation : eventRepresentationList) {
+    	
+		// iterate over the event list and delete the events by using the event api
+		for(EventRepresentation eventRepresentation : eventRepresentationList) {
     		eventApi.delete(eventRepresentation);
     	}
 	}
