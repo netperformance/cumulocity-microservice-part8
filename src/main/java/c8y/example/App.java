@@ -30,8 +30,10 @@ import com.cumulocity.sdk.client.event.PagedEventCollectionRepresentation;
 import com.cumulocity.sdk.client.identity.IdentityApi;
 import com.cumulocity.sdk.client.inventory.InventoryApi;
 import com.cumulocity.sdk.client.measurement.MeasurementApi;
+import com.google.common.collect.Lists;
 
 import c8y.IsDevice;
+import javassist.expr.NewArray;
 
 
 @MicroserviceApplication
@@ -179,25 +181,20 @@ public class App{
     public List<EventRepresentation> getAllEvents() {
     	
     	EventCollection eventCollection = eventApi.getEvents();
-    	PagedEventCollectionRepresentation pagedEventCollectionRepresentation = eventCollection.get();   	
-    	Iterator<EventRepresentation> it = pagedEventCollectionRepresentation.allPages().iterator();
+    	PagedEventCollectionRepresentation pagedEventCollectionRepresentation = eventCollection.get();   
     	
-    	List<EventRepresentation> eventRepresentationList = new ArrayList<>();	
-    	while(it.hasNext()) {
-    		eventRepresentationList.add(it.next());
-    	}
+    	Iterable<EventRepresentation> iterable = pagedEventCollectionRepresentation.allPages();    	
+    	List<EventRepresentation> eventRepresentationList = Lists.newArrayList(iterable);
     	
     	return eventRepresentationList;
     }
     
 	// delete all events
+    // there is no bulk delete for events existing.
 	@RequestMapping("deleteAllEvents")
-	public void deleteAllAlarms() {
-    	EventCollection eventCollection = eventApi.getEvents();
-    	PagedEventCollectionRepresentation pagedEventCollectionRepresentation = eventCollection.get();
-    	
-    	List<EventRepresentation> eventRepresentations = pagedEventCollectionRepresentation.getEvents();
-    	for(EventRepresentation eventRepresentation : eventRepresentations) {
+	public void deleteAllAlarms() {		
+		List<EventRepresentation> eventRepresentationList = getAllEvents();		
+    	for(EventRepresentation eventRepresentation : eventRepresentationList) {
     		eventApi.delete(eventRepresentation);
     	}
 	}
